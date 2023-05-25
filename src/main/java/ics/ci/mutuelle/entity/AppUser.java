@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,8 +35,33 @@ public class AppUser {
     @Column(name = "Enabled", length = 1, nullable = false)
     private boolean enabled;
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
     private Collection<UserRole> userRoles;
+/*
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "role_id"))*/
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(
+                    name = "user_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id"))
+    private Collection<AppRole> roles;
+
+    @Transient
+    private String mesroles;
+
+    @ManyToOne
+    @JoinColumn(name = "partenaireId")
+    private Partenaire partenaire;
 
 
 
@@ -44,4 +71,10 @@ public class AppUser {
         this.enabled = enabled;
     }
 
+    /*public AppUser(String userName, String encrytedPassword, boolean enabled, Partenaire partenaire) {
+        this.userName = userName;
+        this.encrytedPassword = encrytedPassword;
+        this.enabled = enabled;
+        this.partenaire = partenaire;
+    }*/
 }

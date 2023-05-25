@@ -1,20 +1,19 @@
 package ics.ci.mutuelle.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "User_Role", //
         uniqueConstraints = { //
                 @UniqueConstraint(name = "USER_ROLE_UK", columnNames = { "User_Id", "Role_Id" }) })
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+
 public class UserRole {
 
     @Id

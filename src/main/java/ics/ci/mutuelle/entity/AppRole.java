@@ -6,15 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Table(name = "App_Role", //
+        uniqueConstraints = { //
+                @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "Role_Name") })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "App_Role", //
-        uniqueConstraints = { //
-                @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "Role_Name") })
+
 public class AppRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,9 @@ public class AppRole {
     public AppRole(String roleName) {
         this.roleName = roleName;
     }
+
+/*    @OneToMany(mappedBy = "appRole", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<UserRole> userRoles = new ArrayList<>();*/
 
 
 }
