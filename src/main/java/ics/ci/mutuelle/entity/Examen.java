@@ -19,7 +19,7 @@ public class Examen extends Prescription {
 
     private String renseignementClinique;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+   /* @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "examen_type",
             joinColumns = @JoinColumn(
@@ -27,5 +27,5 @@ public class Examen extends Prescription {
             inverseJoinColumns = @JoinColumn(
                     name = "typeexamen_id"))
 
-    private Set<Typeexamen> typeexamens;
+    private Set<Typeexamen> typeexamens;*/
 }

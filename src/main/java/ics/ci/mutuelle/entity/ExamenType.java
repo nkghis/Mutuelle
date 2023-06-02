@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "examen_type")
@@ -29,6 +30,6 @@ public class ExamenType {
     @JoinColumn(name = "Typeexamen_Id", nullable = false)
     private Typeexamen typeexamen;
 
-    private LocalDate date;
+    private LocalDateTime date;
     private Boolean etat;
 }

@@ -1,5 +1,6 @@
 package ics.ci.mutuelle.entity;
 
+import ics.ci.mutuelle.enums.CategorieSpecialite;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +29,12 @@ public class Specialite {
 
     private String description;
 
-    public Specialite(String libelle, String description) {
+    private CategorieSpecialite categorie;
+
+    public Specialite(String libelle, String description, CategorieSpecialite categorie) {
         this.libelle = libelle;
         this.description = description;
+        this.categorie = categorie;
     }
 
 

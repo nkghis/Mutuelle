@@ -5,6 +5,7 @@ import ics.ci.mutuelle.dto.adherant.AdherantINPUT;
 import ics.ci.mutuelle.dto.beneficiaire.BeneficiaireDTO;
 import ics.ci.mutuelle.dto.beneficiaire.BeneficiaireINPUT;
 import ics.ci.mutuelle.entity.Adherant;
+import ics.ci.mutuelle.entity.Assure;
 import ics.ci.mutuelle.entity.Beneficiaire;
 
 import java.util.List;
@@ -27,5 +28,8 @@ public interface AssureService {
     List<BeneficiaireDTO>  listToBeneficiaireDTOut();
     BeneficiaireDTO createBeneficiaire(BeneficiaireINPUT dto);
     BeneficiaireDTO createBeneficiaire(Beneficiaire beneficiaire);
+    Adherant getAdherantByAssure(Assure assure);
+    Double getTauxCouverture(Adherant adherant);
+    Double getTauxCouverture(Assure assure);
 
 }

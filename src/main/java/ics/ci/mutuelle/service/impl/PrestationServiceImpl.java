@@ -8,16 +8,16 @@ import ics.ci.mutuelle.dto.prestation.examenanalyse.ExamenAnalyseINPUT;
 import ics.ci.mutuelle.entity.*;
 import ics.ci.mutuelle.mapper.ConsultationMapper;
 import ics.ci.mutuelle.mapper.ExamenAnalyseMapper;
-import ics.ci.mutuelle.mapper.MapperExamenType;
+import ics.ci.mutuelle.mapper.ExamenTypeMapper;
 import ics.ci.mutuelle.repository.*;
 import ics.ci.mutuelle.service.PrestationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 @Service
@@ -28,7 +28,7 @@ public class PrestationServiceImpl implements PrestationService {
     private final ExamenAnalyseRepository examenAnalyseRepository;
     private final ConsultationMapper consultationMapper;
     private final ExamenAnalyseMapper examenAnalyseMapper;
-    private final MapperExamenType mapperExamenType;
+    private final ExamenTypeMapper mapperExamenType;
     private final AssureRepository assureRepository;
     private final HopitalRepository hopitalRepository;
     private final MedecinRepository medecinRepository;
@@ -39,7 +39,7 @@ public class PrestationServiceImpl implements PrestationService {
 
 
 
-    public PrestationServiceImpl(ConsultationRepository consultationRepository, ExamenAnalyseRepository examenAnalyseRepository, ConsultationMapper consultationMapper, ExamenAnalyseMapper examenAnalyseMapper, MapperExamenType mapperExamenType, AssureRepository assureRepository, HopitalRepository hopitalRepository, MedecinRepository medecinRepository, SpecialiteRepository specialiteRepository, ExamenRepository examenRepository, ExamenTypeRepository examenTypeRepository) {
+    public PrestationServiceImpl(ConsultationRepository consultationRepository, ExamenAnalyseRepository examenAnalyseRepository, ConsultationMapper consultationMapper, ExamenAnalyseMapper examenAnalyseMapper, ExamenTypeMapper mapperExamenType, AssureRepository assureRepository, HopitalRepository hopitalRepository, MedecinRepository medecinRepository, SpecialiteRepository specialiteRepository, ExamenRepository examenRepository, ExamenTypeRepository examenTypeRepository) {
         this.consultationRepository = consultationRepository;
         this.examenAnalyseRepository = examenAnalyseRepository;
         this.consultationMapper = consultationMapper;
@@ -119,8 +119,8 @@ public class PrestationServiceImpl implements PrestationService {
 
     @Override
     public ExamenAnalyseDTO createExamenAnalyse(ExamenAnalyse examenAnalyse) {
-        List<ExamenTypeDTO> dtos = mapperExamenType.listToDTO(examenTypeRepository.findByExamen(examenAnalyse.getExamen()));
-        return examenAnalyseMapper.toDTO(examenAnalyseRepository.save(examenAnalyse), dtos);
+        List <ExamenTypeDTO> dtos = mapperExamenType.listToDTO(examenTypeRepository.findByExamen(examenAnalyse.getExamen()));
+        return examenAnalyseMapper.toDTO(examenAnalyseRepository.save(examenAnalyse),  dtos);
     }
 
     @Override

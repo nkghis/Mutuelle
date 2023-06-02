@@ -31,9 +31,8 @@ public class DetailFacturePharmacie {
     @JoinColumn(name = "detailordonnanceId", nullable = false)
     private DetailOrdonnance detailOrdonnance;
 
-    private Double cotePartAssure;
-    private Double cotePartAssurance;
-    private Double montantTotal;
-    private LocalDateTime dateTime;
+    private Double prixUnitaire;
+    private int quantite;
+
 
 }

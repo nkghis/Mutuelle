@@ -5,17 +5,20 @@ import ics.ci.mutuelle.dto.adherant.AdherantDTO;
 import ics.ci.mutuelle.dto.beneficiaire.BeneficiaireDTO;
 import ics.ci.mutuelle.dto.beneficiaire.BeneficiaireINPUT;
 import ics.ci.mutuelle.entity.Adherant;
+import ics.ci.mutuelle.entity.Assure;
 import ics.ci.mutuelle.entity.Beneficiaire;
 import ics.ci.mutuelle.entity.Police;
 import ics.ci.mutuelle.enums.Sexe;
 import ics.ci.mutuelle.mapper.AdherantMapper;
 import ics.ci.mutuelle.mapper.BeneficiaireMapper;
 import ics.ci.mutuelle.repository.AdherantRepository;
+import ics.ci.mutuelle.repository.AssureRepository;
 import ics.ci.mutuelle.repository.BeneficiaireRepository;
 import ics.ci.mutuelle.repository.PoliceRepository;
 import ics.ci.mutuelle.service.AssureService;
 import ics.ci.mutuelle.utils.DateConvert;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +29,20 @@ import java.util.List;
 @Slf4j
 public class AssureServiceImpl implements AssureService {
 
+    private final AssureRepository assureRepository;
     private final AdherantRepository adherantRepository;
     private final BeneficiaireRepository beneficiaireRepository;
     private final PoliceRepository policeRepository;
     private final AdherantMapper adherantMapper;
     private final BeneficiaireMapper beneficiaireMapper;
 
-    public AssureServiceImpl(AdherantRepository adherantRepository, BeneficiaireRepository beneficiaireRepository, PoliceRepository policeRepository, AdherantMapper adherantMapper, BeneficiaireMapper beneficiaireMapper) {
+    public AssureServiceImpl(AdherantRepository adherantRepository, BeneficiaireRepository beneficiaireRepository, PoliceRepository policeRepository, AdherantMapper adherantMapper, BeneficiaireMapper beneficiaireMapper, AssureRepository assureRepository) {
         this.adherantRepository = adherantRepository;
         this.beneficiaireRepository = beneficiaireRepository;
         this.policeRepository = policeRepository;
         this.adherantMapper = adherantMapper;
         this.beneficiaireMapper = beneficiaireMapper;
+        this.assureRepository = assureRepository;
     }
 
 
@@ -173,5 +178,29 @@ public class AssureServiceImpl implements AssureService {
     public BeneficiaireDTO createBeneficiaire(Beneficiaire beneficiaire) {
         beneficiaireRepository.save(beneficiaire);
         return this.toBeneficiaireDTO(beneficiaire);
+    }
+
+    @Override
+    public Adherant getAdherantByAssure(Assure assure) {
+        Adherant adherant;
+        //Assure assure = assureRepository.getOne(id);
+        if (assure.getTypeassure().equals("adh")){
+            adherant = adherantRepository.getOne(assure.getAssureId());
+        }else {
+            Beneficiaire beneficiaire = beneficiaireRepository.getOne(assure.getAssureId());
+            adherant = beneficiaire.getAdherant();
+        }
+        return adherant;
+    }
+
+    @Override
+    public Double getTauxCouverture(Adherant adherant) {
+        return adherant.getPolice().getTauxCouverture();
+    }
+
+    @Override
+    public Double getTauxCouverture(Assure assure) {
+        Adherant adherant = this.getAdherantByAssure(assure);
+        return this.getTauxCouverture(adherant);
     }
 }

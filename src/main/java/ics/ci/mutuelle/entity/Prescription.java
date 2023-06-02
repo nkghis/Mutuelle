@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "prescriptions"/*, //
@@ -27,9 +28,19 @@ public abstract class Prescription {
     private Long prescriptionId;
 
 
+    @ManyToOne
+    @JoinColumn(name = "consultationId")
+    private Consultation consultation;
+
+
+    private LocalDate date;
 
 
     /*@ManyToOne
     @JoinColumn(name = "prestationId")*/
 
+    public Prescription(Consultation consultation, LocalDate date) {
+        this.consultation = consultation;
+        this.date = date;
+    }
 }

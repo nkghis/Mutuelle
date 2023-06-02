@@ -31,7 +31,7 @@ public class DetailOrdonnance {
     private Medicament medicament;
 
 
-    private LocalDate date;
+    //private LocalDate date;
     private int quantite;
     private Boolean estPaye;
     private Boolean estPayeQuantite;

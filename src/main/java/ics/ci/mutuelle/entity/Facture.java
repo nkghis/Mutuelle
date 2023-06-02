@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -25,4 +27,13 @@ public abstract class Facture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "facture_id", nullable = false)
     private Long factureId;
+    private Double cotePartAssure;
+    private Double cotePartAssurance;
+    private Double montantTotal;
+    private LocalDateTime date;
+    private LocalDate dateFacture;
+
+
+
+
 }

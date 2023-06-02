@@ -29,9 +29,5 @@ public class FacturePharmacie extends Facture {
     @JoinColumn(name = "ordonnanceId")
     private Ordonnance ordonnance;
 
-    private LocalDateTime date;
 
-    private Double montantTotal;
-    private Double cotePartAssure;
-    private Double cotePartAssurance;
 }

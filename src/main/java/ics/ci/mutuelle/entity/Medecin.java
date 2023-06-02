@@ -33,14 +33,14 @@ public class Medecin {
     private LocalDate datenaissance;
     private Sexe sexe;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+   /* @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "specialite_medecin",
             joinColumns = @JoinColumn(
                     name = "medecin_id"),
             inverseJoinColumns = @JoinColumn(
                     name = "specialite_id"))
-    private Set<Specialite> specialites;
+    private Set<Specialite> specialites;*/
 
     public Medecin(String reference, String nom, String prenom, LocalDate datenaissance, Sexe sexe) {
         this.reference = reference;

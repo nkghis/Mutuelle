@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -17,18 +18,24 @@ import java.util.Set;
 @NoArgsConstructor
 public class Ordonnance extends Prescription{
 
-    private LocalDate date;
+    private LocalDateTime dateOrdonnance;
 
     private Boolean estPaye;
 
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    /*@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "detailordonnance",
             joinColumns = @JoinColumn(
                     name = "medicament_id"),
             inverseJoinColumns = @JoinColumn(
                     name = "ordonnance_id"))
-    private Set<Medicament> medicaments;
+    private Set<Medicament> medicaments;*/
+
+    public Ordonnance(Consultation consultation, LocalDate date, LocalDateTime dateOrdonnance, Boolean estPaye) {
+        super(consultation, date);
+        this.dateOrdonnance = dateOrdonnance;
+        this.estPaye = estPaye;
+    }
 }

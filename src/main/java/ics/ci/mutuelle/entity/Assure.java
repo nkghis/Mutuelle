@@ -28,6 +28,9 @@ public abstract class Assure {
     @Column(name = "assure_id", nullable = false)
     private Long assureId;
 
+    @Column(name="typeassure", insertable = false, updatable = false)
+    protected String typeassure;
+
     @Column(unique = true)
     private String matricule;
     private String nom;

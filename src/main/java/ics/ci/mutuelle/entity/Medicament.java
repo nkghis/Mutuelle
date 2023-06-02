@@ -27,7 +27,7 @@ public class Medicament {
     private String reference;
 
     private String libelle;
-    @ManyToMany(fetch = FetchType.EAGER)
+    /*@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "medicament_pathologie",
             joinColumns = @JoinColumn(
@@ -35,5 +35,10 @@ public class Medicament {
             inverseJoinColumns = @JoinColumn(
                     name = "pathologie_id"))
 
-    private Set<Pathologie> pathologies;
+    private Set<Pathologie> pathologies;*/
+
+    public Medicament(String reference, String libelle) {
+        this.reference = reference;
+        this.libelle = libelle;
+    }
 }

@@ -28,8 +28,11 @@ public class Police {
 
     private String libelle;
 
-    public Police(String numeropolice, String libelle) {
+    private Double tauxCouverture;
+
+    public Police(String numeropolice, String libelle, Double tauxCouverture) {
         this.numeropolice = numeropolice;
         this.libelle = libelle;
+        this.tauxCouverture = tauxCouverture;
     }
 }

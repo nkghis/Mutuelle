@@ -1,19 +1,45 @@
 package ics.ci.mutuelle;
 
 
+import ics.ci.mutuelle.dao.InputMedicament;
+import ics.ci.mutuelle.dto.detailFacturePharmacie.DetailFacturePharmacieINPUT;
+import ics.ci.mutuelle.dto.facture.factureHopitalConsultation.FactureHopitalConsultationINPUT;
+import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieDTO;
+import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieINPUT;
+import ics.ci.mutuelle.dto.medicament.MedicamentINPUT;
+import ics.ci.mutuelle.dto.prescription.examen.ExamenDTO;
+import ics.ci.mutuelle.dto.prescription.examen.ExamenINPUT;
+import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceDTO;
+import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceINPUT;
+import ics.ci.mutuelle.dto.prescription.orientation.OrientationDTO;
+import ics.ci.mutuelle.dto.prescription.orientation.OrientationINPUT;
 import ics.ci.mutuelle.dto.prestation.consultation.ConsultationDTO;
 import ics.ci.mutuelle.dto.prestation.consultation.ConsultationINPUT;
 import ics.ci.mutuelle.entity.Consultation;
-import ics.ci.mutuelle.repository.ConsultationRepository;
+import ics.ci.mutuelle.entity.*;
+import ics.ci.mutuelle.enums.CategorieSpecialite;
+import ics.ci.mutuelle.enums.Sexe;
+import ics.ci.mutuelle.repository.*;
+import ics.ci.mutuelle.repository.OrientationRepository;
+import ics.ci.mutuelle.repository.SpecialiteRepository;
+import ics.ci.mutuelle.service.AssureService;
+import ics.ci.mutuelle.service.FactureService;
 import ics.ci.mutuelle.service.PrescriptionService;
 import ics.ci.mutuelle.service.PrestationService;
+import ics.ci.mutuelle.utils.EncrytedPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @SpringBootApplication
@@ -21,11 +47,14 @@ public class MutuelleApplication {
 
 
 
-
-
 	public static void main(String[] args) {
 
+
 		ApplicationContext ctx = SpringApplication.run(MutuelleApplication.class, args);
+
+/*		AssureService assureService = ctx.getBean(AssureService.class);
+		Adherant adherant = assureService.getAdherantByAssure(3L);
+		String f ="";*/
 
 		/*SpecialiteHopitalRepository specialiteHopitalRepository = ctx.getBean(SpecialiteHopitalRepository.class);
 		HopitalRepository hopitalRepository = ctx.getBean(HopitalRepository.class);
@@ -64,14 +93,60 @@ public class MutuelleApplication {
 		String s = "";
 		*/
 
+/*		HopitalRepository hopitalRepository = ctx.getBean(HopitalRepository.class);
+		SpecialiteRepository specialiteRepository = ctx.getBean(SpecialiteRepository.class);
+		FactureService factureService = ctx.getBean(FactureService.class);
+		Hopital hopital = hopitalRepository.findByPartenaireId(2L);
+		Specialite specialite = specialiteRepository.findBySpecialiteId(2L);
+		Double aa = factureService.getMontantConsultation(hopital,specialite);
+		String s ="";*/
 
-/*		//Ajout Police Adherant et Beneficiaire
+
+		/*		String p = "123";
+		String password = EncrytedPasswordUtils.encrytePassword(p);
+
+		System.out.println("===============DEBUT TRANSACTION=======================");
+		UserRepository userRepository = ctx.getBean(UserRepository.class);
+		AppUser user1 = userRepository.save(new AppUser("admin",password,true));
+		AppUser user2 = userRepository.save(new AppUser("user",password,true));
+		AppUser userHopitalVallons = userRepository.save(new AppUser("hvallons",password,true));
+		AppUser userHopitalRosier = userRepository.save(new AppUser("hrosiers",password,true));
+		AppUser userPharmacieVallons = userRepository.save(new AppUser("pvallons",password,true));
+		AppUser userPharmacieStLuc = userRepository.save(new AppUser("pstluc",password,true));
+		System.out.println("===============AJOUT CLIENT=======================");
+		userRepository.findAll().forEach(u->System.out.println(u.getUserName()));
+		System.out.println("Utilisateurs ajoutés avec succes");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("===============AJOUT ROLE=======================");
+		RoleRepository roleRepository = ctx.getBean(RoleRepository.class);
+		AppRole roleadmin = roleRepository.save(new AppRole("ROLE_ADMIN"));
+		AppRole roleuser = roleRepository.save(new AppRole("ROLE_USER"));
+		AppRole rolePharmacie = roleRepository.save(new AppRole("ROLE_PHARMACIE"));
+		AppRole roleHopital = roleRepository.save(new AppRole("ROLE_HOPITAL"));
+		roleRepository.findAll().forEach(u->System.out.println(u.getRoleName()));
+		System.out.println("Roles ajoutés avec succes");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+		System.out.println("===============AFFECTATION ROLE PAR USER=======================");
+		UserRoleRepository userRoleRepository = ctx.getBean(UserRoleRepository.class);
+		userRoleRepository.save(new UserRole(user1,roleadmin));
+		userRoleRepository.save(new UserRole(user1,roleuser));
+		userRoleRepository.save(new UserRole(user2,roleuser));
+		userRoleRepository.save(new UserRole(userHopitalVallons,roleHopital));
+		userRoleRepository.save(new UserRole(userHopitalRosier,roleHopital));
+		userRoleRepository.save(new UserRole(userPharmacieVallons,rolePharmacie));
+		userRoleRepository.save(new UserRole(userPharmacieStLuc,rolePharmacie));
+
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+
+/*
+		//Ajout Police Adherant et Beneficiaire
 		System.out.println("===============DEBUT TRANSACTION=======================");
 		PoliceRepository policeRepository = ctx.getBean(PoliceRepository.class);
-		Police policeBronze = policeRepository.save(new Police(UUID.randomUUID().toString(), "BRONZE"));
-		Police policeArgent = policeRepository.save(new Police(UUID.randomUUID().toString(), "ARGENT"));
-		Police policeOr = policeRepository.save(new Police(UUID.randomUUID().toString(), "OR"));
-		Police policePlatinium = policeRepository.save(new Police(UUID.randomUUID().toString(), "PLATINIUM"));
+		Police policeBronze = policeRepository.save(new Police(UUID.randomUUID().toString(), "BRONZE", 80D));
+		Police policeArgent = policeRepository.save(new Police(UUID.randomUUID().toString(), "ARGENT", 90D));
+		Police policeOr = policeRepository.save(new Police(UUID.randomUUID().toString(), "OR", 95D));
+		Police policePlatinium = policeRepository.save(new Police(UUID.randomUUID().toString(), "PLATINIUM", 100D));
 		System.out.println("===============AJOUT POLICE=======================");
 		policeRepository.findAll().forEach(u->System.out.println(u.getLibelle()));
 		System.out.println("Police ajoutées avec succès");
@@ -194,27 +269,29 @@ public class MutuelleApplication {
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
 
 
-
-
 /*
-		//Ajout de specialité
+	//Ajout de specialité
 		System.out.println("===============DEBUT TRANSACTION SPECIALITE=======================");
 
 		SpecialiteRepository specialiteRepository = ctx.getBean(SpecialiteRepository.class);
-		Specialite cardiologie =  specialiteRepository.save(new Specialite("CARDIOLOGIE", "Coeur, Système Circulatoire"));
-		Specialite oncologie =  specialiteRepository.save(new Specialite("ONCOLOGIE", "Cancer"));
-		Specialite gastro =  specialiteRepository.save(new Specialite("GASTRO-ENTEROLOGIE", "Foie, Intestin, Estomac, Pancréas"));
-		Specialite neurologie =  specialiteRepository.save(new Specialite("NEUROLOGIE", "Nerf, Systemes Nerveux"));
-		Specialite general =  specialiteRepository.save(new Specialite("GENERALE", "Medecine Générale"));
-		Specialite ophtamologie =  specialiteRepository.save(new Specialite("OPHTAMOLOGIE", "Yeux"));
-		Specialite maternite =  specialiteRepository.save(new Specialite("MATERNITE", "Accouchement"));
-		Specialite gynecologie =  specialiteRepository.save(new Specialite("GYNECOLOGIE", "Sexe feminin"));
-		Specialite urologie =  specialiteRepository.save(new Specialite("UROLOGIE", "Sexe masculin"));
+		Specialite cardiologie =  specialiteRepository.save(new Specialite("CARDIOLOGIE", "Coeur, Système Circulatoire", CategorieSpecialite.SPECIALITE));
+		Specialite oncologie =  specialiteRepository.save(new Specialite("ONCOLOGIE", "Cancer", CategorieSpecialite.SPECIALITE));
+		Specialite gastro =  specialiteRepository.save(new Specialite("GASTRO-ENTEROLOGIE", "Foie, Intestin, Estomac, Pancréas", CategorieSpecialite.SPECIALITE));
+		Specialite neurologie =  specialiteRepository.save(new Specialite("NEUROLOGIE", "Nerf, Systemes Nerveux", CategorieSpecialite.SPECIALITE));
+		Specialite general =  specialiteRepository.save(new Specialite("GENERALE", "Medecine Générale", CategorieSpecialite.GENERALE));
+		Specialite ophtamologie =  specialiteRepository.save(new Specialite("OPHTAMOLOGIE", "Yeux", CategorieSpecialite.GENERALE));
+		Specialite maternite =  specialiteRepository.save(new Specialite("MATERNITE", "Accouchement", CategorieSpecialite.GENERALE));
+		Specialite gynecologie =  specialiteRepository.save(new Specialite("GYNECOLOGIE", "Sexe feminin", CategorieSpecialite.GENERALE));
+		Specialite urologie =  specialiteRepository.save(new Specialite("UROLOGIE", "Sexe masculin", CategorieSpecialite.SPECIALITE));
+		//Specialite chirurgie =  specialiteRepository.save(new Specialite("CHIRURGIE", "Sexe masculin", CategorieSpecialite.SPECIALITE));
 		System.out.println("===============AJOUT SPECIALITES=======================");
 		specialiteRepository.findAll().forEach(u->System.out.println(u.getLibelle()));
 		System.out.println("Specialités ajoutés avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
+ */
+
+/*
 		//Ajout de Partenaire.
 		//Ajout de Hopitaux
 
@@ -226,6 +303,8 @@ public class MutuelleApplication {
 		hopitalLesvallons.setNom("LES VALLONS");
 		hopitalLesvallons.setContact("+2250101010101");
 		hopitalLesvallons.setEtat(true);
+		hopitalLesvallons.setPrixConsultationGenerale(14000D);
+		hopitalLesvallons.setPrixConsultationSpecialite(18500D);
 		hopitalRepository.save(hopitalLesvallons);
 
 		Hopital hopitalLesRosiers = new Hopital();
@@ -233,6 +312,8 @@ public class MutuelleApplication {
 		hopitalLesRosiers.setNom("LES ROSIERS");
 		hopitalLesRosiers.setContact("+2250101010102");
 		hopitalLesRosiers.setEtat(true);
+		hopitalLesRosiers.setPrixConsultationGenerale(12000D);
+		hopitalLesRosiers.setPrixConsultationSpecialite(1500D);
 		hopitalRepository.save(hopitalLesRosiers);
 
 		System.out.println("===============AJOUT HOPITAUX=======================");
@@ -287,7 +368,7 @@ public class MutuelleApplication {
 		System.out.println("===============AJOUT PHARMACIE=======================");
 		pharmacieRepository.findAll().forEach(u->System.out.println(u.getNom()));
 		System.out.println("Pharmacies ajoutées avec succès");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++"); */
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
 
 
 
@@ -296,45 +377,10 @@ public class MutuelleApplication {
 
 
 
-		/*String p = "123";
-		String password = EncrytedPasswordUtils.encrytePassword(p);
-
-		System.out.println("===============DEBUT TRANSACTION=======================");
-		UserRepository userRepository = ctx.getBean(UserRepository.class);
-		AppUser user1 = userRepository.save(new AppUser("admin",password,true));
-		AppUser user2 = userRepository.save(new AppUser("user",password,true));
-		AppUser userHopitalVallons = userRepository.save(new AppUser("hvallons",password,true));
-		AppUser userHopitalRosier = userRepository.save(new AppUser("hrosiers",password,true));
-		AppUser userPharmacieVallons = userRepository.save(new AppUser("pvallons",password,true));
-		AppUser userPharmacieStLuc = userRepository.save(new AppUser("pstluc",password,true));
-		System.out.println("===============AJOUT CLIENT=======================");
-		userRepository.findAll().forEach(u->System.out.println(u.getUserName()));
-		System.out.println("Utilisateurs ajoutés avec succes");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("===============AJOUT ROLE=======================");
-		RoleRepository roleRepository = ctx.getBean(RoleRepository.class);
-		AppRole roleadmin = roleRepository.save(new AppRole("ROLE_ADMIN"));
-		AppRole roleuser = roleRepository.save(new AppRole("ROLE_USER"));
-		AppRole rolePharmacie = roleRepository.save(new AppRole("ROLE_PHARMACIE"));
-		AppRole roleHopital = roleRepository.save(new AppRole("ROLE_HOPITAL"));
-		roleRepository.findAll().forEach(u->System.out.println(u.getRoleName()));
-		System.out.println("Roles ajoutés avec succes");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-		System.out.println("===============AFFECTATION ROLE PAR USER=======================");
-		UserRoleRepository userRoleRepository = ctx.getBean(UserRoleRepository.class);
-		userRoleRepository.save(new UserRole(user1,roleadmin));
-		userRoleRepository.save(new UserRole(user1,roleuser));
-		userRoleRepository.save(new UserRole(user2,roleuser));
-		userRoleRepository.save(new UserRole(userHopitalVallons,roleHopital));
-		userRoleRepository.save(new UserRole(userHopitalRosier,roleHopital));
-		userRoleRepository.save(new UserRole(userPharmacieVallons,rolePharmacie));
-		userRoleRepository.save(new UserRole(userPharmacieStLuc,rolePharmacie));
-
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
 
-/*		//Update Table User
+/*
+		//Update Table User
 		System.out.println("===============DEBUT TRANSACTION UPDATE TABLE USER WITH PARTENAIRE=======================");
 
 		UserRepository userRepository = ctx.getBean(UserRepository.class);
@@ -364,17 +410,17 @@ public class MutuelleApplication {
 		System.out.println("Mise a jour de la table APPUSER effectuée avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");
-		*/
+*/
 
 
-
-/*		//Ajouter medecin
+/*
+		//Ajouter medecin
 
 		System.out.println("===============DEBUT MEDECIN ET MEDECIN_SPECIALITE=======================");
 
 		SpecialiteRepository specialiteRepository = ctx.getBean(SpecialiteRepository.class);
 		SpecialiteMedecinRepository specialiteMedecinRepository = ctx.getBean(SpecialiteMedecinRepository.class);
-		Specialite chirurgie =  specialiteRepository.save(new Specialite("CHIRURGIE", "Opération, Urgence"));
+		Specialite chirurgie =  specialiteRepository.save(new Specialite("CHIRURGIE", "Opération, Urgence", CategorieSpecialite.SPECIALITE));
 		MedecinRepository medecinRepository = ctx.getBean(MedecinRepository.class);
 		Medecin medecin1 = new Medecin();
 		medecin1.setReference(UUID.randomUUID().toString());
@@ -468,56 +514,269 @@ public class MutuelleApplication {
 		consultationINPUT3.setDiagnostic("Potentiel debut de lombalgie");
 		consultationINPUT3.setDatePrestation(LocalDate.of(2023, 2, 1));
 
+		ConsultationINPUT consultationINPUT4 = new ConsultationINPUT();
+		consultationINPUT4.setAssure(9L);
+		consultationINPUT4.setHopital(1L);
+		consultationINPUT4.setMedecin(3L);
+		consultationINPUT4.setSpecialite(5L);
+		consultationINPUT4.setSymptome("Fourmillement aux pieds chronique depuis deux ans, Douleurs Musculaire");
+		consultationINPUT4.setDiagnostic("Voir un neurologue");
+		consultationINPUT4.setDatePrestation(LocalDate.of(2023, 1, 1));
+
+
 		ConsultationDTO consultationDTO1 =  prestationService.createConsultation(consultationINPUT1);
 		ConsultationDTO consultationDTO2 =  prestationService.createConsultation(consultationINPUT2);
 		ConsultationDTO consultationDTO3 =  prestationService.createConsultation(consultationINPUT3);
+		ConsultationDTO consultationDTO4 =  prestationService.createConsultation(consultationINPUT4);
 		List<ConsultationDTO> dtos = prestationService.listToConsultationDTO();
 		System.out.println("===============AJOUT CONSULTATION=======================");
 		System.out.println("consultations ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
-		ConsultationRepository consultationRepository = ctx.getBean(ConsultationRepository.class);
-		PrescriptionService prescriptionService = ctx.getBean(PrescriptionService.class);
-
+/*
 		//Ajouter Prescription.
+		System.out.println("===============DEBUT MEDICAMENT PATHOLOGIE ET AFFECTATION =======================");
+
+		PathologieRepository pathologieRepository = ctx.getBean(PathologieRepository.class);
+		MedicamentRepository medicamentRepository = ctx.getBean(MedicamentRepository.class);
+		MedicamentPathologieRepository repository =ctx.getBean(MedicamentPathologieRepository.class);
+
+		System.out.println("===============AJOUT MEDICAMENT=======================");
+
+		Medicament RIMDAL = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "RIMDAL"));
+		Medicament PANADOL = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "PANADOL"));
+		Medicament STIMOL = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "STIMOL"));
+		Medicament PRIMAQUININE = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "PRIMAQUININE"));
+		Medicament MEFLOQUINE = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "RIMDAL"));
+
+
+		Medicament RASEMAC = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "RASEMAC"));
+		Medicament ANTICARBINE = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "ANTICARBINE"));
+		Medicament METEOSPAMSLY = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "METEOSPAMSLY"));
+		Medicament INEXIUM = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "INEXIUM"));
+		Medicament GAVISCON = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "GAVISCON"));
+		Medicament BEDELIX = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "BEDELIX"));
+		Medicament VLEIZONE = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "ES VLEIZONE PLUS"));
+		Medicament MAALOX = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "MAALOX"));
+
+
+		Medicament FERVEX = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "FERVEX"));
+		Medicament RHUMAGRIP = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "RHUMAGRIP"));
+
+		Medicament GAGNERVEP = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "GAGNERVEP"));
+		Medicament GENAVOL = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "GENAVOL"));
+
+		Medicament MAG2 = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "MAG2"));
+		Medicament MAXIMAG = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "MAXIMAG"));
+
+		Medicament FLAGYL = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "FLAGYL"));
+		Medicament ADAV = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "ADAV"));
+
+		Medicament VISCERALGINE = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "VISCERALGINE"));
+		Medicament INFLATO = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "INFLATO"));
+
+		Medicament HUMEX = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "HUMEX"));
+		Medicament PADERYL = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "PADERYL"));
+		Medicament EUPHON = medicamentRepository.save(new Medicament(UUID.randomUUID().toString(), "EUPHON"));
+
+
+
+
+		System.out.println("===============AJOUT PATHOLOGIE=======================");
+		Pathologie palu = pathologieRepository.save(new Pathologie("PALUDISME"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE PALU=======================");
+		repository.save(new MedicamentPathologie(RIMDAL, palu));
+		repository.save(new MedicamentPathologie(PANADOL, palu));
+		repository.save(new MedicamentPathologie(STIMOL, palu));
+		repository.save(new MedicamentPathologie(PRIMAQUININE, palu));
+		repository.save(new MedicamentPathologie(MEFLOQUINE, palu));
+		System.out.println("===============AJOUT PATHOLOGIE COLON=======================");
+		Pathologie colon = pathologieRepository.save(new Pathologie("COLON IRRITABLE"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE COLON=======================");
+		repository.save(new MedicamentPathologie(RASEMAC, colon));
+		repository.save(new MedicamentPathologie(ANTICARBINE, colon));
+		repository.save(new MedicamentPathologie(METEOSPAMSLY, colon));
+		repository.save(new MedicamentPathologie(INEXIUM, colon));
+		repository.save(new MedicamentPathologie(GAVISCON, colon));
+		repository.save(new MedicamentPathologie(BEDELIX, colon));
+		repository.save(new MedicamentPathologie(VLEIZONE, colon));
+		repository.save(new MedicamentPathologie(MAALOX, colon));
+
+		System.out.println("===============AJOUT PATHOLOGIE GRIPPE=======================");
+		Pathologie grippe = pathologieRepository.save(new Pathologie("GRIPPE"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE GRIPPE=======================");
+		repository.save(new MedicamentPathologie(FERVEX, grippe));
+		repository.save(new MedicamentPathologie(RHUMAGRIP, grippe));
+
+		System.out.println("===============AJOUT PATHOLOGIE GRIPPE=======================");
+		Pathologie lombalgie = pathologieRepository.save(new Pathologie("LOMBALGIE"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE GRIPPE=======================");
+		repository.save(new MedicamentPathologie(GAGNERVEP, lombalgie));
+		repository.save(new MedicamentPathologie(GENAVOL, lombalgie));
+
+		System.out.println("===============AJOUT PATHOLOGIE VITAMINE=======================");
+		Pathologie vitamine = pathologieRepository.save(new Pathologie("VITAMINE"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE VITAMINE=======================");
+		repository.save(new MedicamentPathologie(MAG2, vitamine));
+		repository.save(new MedicamentPathologie(MAXIMAG, vitamine));
+		System.out.println("===============AJOUT PATHOLOGIE INFECTION=======================");
+		Pathologie infection = pathologieRepository.save(new Pathologie("INFECTION"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE INFECTION=======================");
+		repository.save(new MedicamentPathologie(FLAGYL, infection));
+		repository.save(new MedicamentPathologie(ADAV, infection));
+
+		System.out.println("===============AJOUT PATHOLOGIE INFLAMMATION=======================");
+		Pathologie inflammation = pathologieRepository.save(new Pathologie("INFLAMMATION"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE INFLAMMATION=======================");
+		repository.save(new MedicamentPathologie(VISCERALGINE, inflammation));
+		repository.save(new MedicamentPathologie(INFLATO, inflammation));
+		System.out.println("===============AJOUT PATHOLOGIE TOUX=======================");
+		Pathologie toux = pathologieRepository.save(new Pathologie("TOUX"));
+		System.out.println("===============AJOUT MEDICAMENT PATHOLOGIE TOUX=======================");
+		repository.save(new MedicamentPathologie(HUMEX, toux));
+		repository.save(new MedicamentPathologie(PADERYL, toux));
+		repository.save(new MedicamentPathologie(EUPHON, toux));
+		System.out.println("===============AFFECTATION PATHOLOGIE=======================");
+
+		System.out.println("Medicaments, pathologies et affection medicament aux pathologies ajoutés avec succès");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+/*
+		//Ajouter Type examen.
+		System.out.println("===============DEBUT TYPE EXAMEN=======================");
+
+		TypeExamenRepository typeExamenRepository = ctx.getBean(TypeExamenRepository.class);
+
+		System.out.println("===============AJOUT TYPE EXAMEN=======================");
+
+		Typeexamen BIOPSIE = typeExamenRepository.save(new Typeexamen("BIOPSIE"));
+		Typeexamen COLOSCOPIE = typeExamenRepository.save(new Typeexamen("COLOSCOPIE"));
+		Typeexamen ECHOGRAPHIE = typeExamenRepository.save(new Typeexamen("ECHOGRAPHIE"));
+		Typeexamen DOPPLER = typeExamenRepository.save(new Typeexamen("DOPPLER"));
+		Typeexamen ECOGRAPHIE = typeExamenRepository.save(new Typeexamen("ECOGRAPHIE"));
+		Typeexamen ELECTROCARDIOGRAMME = typeExamenRepository.save(new Typeexamen("ELECTROCARDIOGRAMME"));
+		Typeexamen FIBROSCOPIE = typeExamenRepository.save(new Typeexamen("FIBROSCOPIE"));
+		Typeexamen FIBROSCAN = typeExamenRepository.save(new Typeexamen("FIBROSCAN"));
+		Typeexamen FROTIS_VAGINAL = typeExamenRepository.save(new Typeexamen("FROTIS VAGINAL"));
+		Typeexamen HEMOGRAMME = typeExamenRepository.save(new Typeexamen("HEMOGRAMME"));
+		Typeexamen NFS = typeExamenRepository.save(new Typeexamen("NFS"));
+		Typeexamen IRM = typeExamenRepository.save(new Typeexamen("TRANSMINASE"));
+		Typeexamen TRANSMINASE = typeExamenRepository.save(new Typeexamen("IRM"));
+		Typeexamen SCANNER = typeExamenRepository.save(new Typeexamen("SCANNER"));
+		Typeexamen UREE = typeExamenRepository.save(new Typeexamen("UREE"));
+		Typeexamen OCT_SPECTRAL = typeExamenRepository.save(new Typeexamen("OCT SPECTRAL"));
+		Typeexamen CREATININE = typeExamenRepository.save(new Typeexamen("CREATININE"));
+
+
+		System.out.println("Type examen ajoutés avec succès");
+		typeExamenRepository.findAll().forEach(u->System.out.println(u.getNom()));
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+
+
+/*		//Ajouter Prescription.
 		System.out.println("===============DEBUT PRESCRIPTION=======================");
+
+		PrescriptionService prescriptionService = ctx.getBean(PrescriptionService.class);
 
 		//Ajout Examen
 		System.out.println("    @@@__DEBUT EXAMEN__@@@");
-
-
-
+		List<Long> typeExamen = new ArrayList<>();
+		typeExamen.add(7L);
+		typeExamen.add(11L);
+		typeExamen.add(12L);
+		ExamenINPUT examenINPUT = new ExamenINPUT();
+		examenINPUT.setDate(LocalDate.now());
+		examenINPUT.setConsultation(3L);
+		examenINPUT.setRenseignementClinique("Reflux Gastrique Chronique");
+		examenINPUT.setTypeExamens(typeExamen);
+		ExamenDTO examenDTO = prescriptionService.createExamen(examenINPUT);
 		System.out.println("    @@@__FIN EXAMEN__@@@");
 
 		//Ajout Ordonnance
-
 		System.out.println("    @@@__DEBUT ORDONNANCE__@@@");
-
+		List<InputMedicament> inputMedicaments = new ArrayList<>();
+		inputMedicaments.add(new InputMedicament(1L, 1));
+		inputMedicaments.add(new InputMedicament(2L, 1));
+		inputMedicaments.add(new InputMedicament(3L, 1));
+		OrdonnanceINPUT ordonnanceINPUT = new OrdonnanceINPUT(1L, LocalDate.now(), inputMedicaments);
+		OrdonnanceDTO dto = prescriptionService.createOrdonnance(ordonnanceINPUT);
 		System.out.println("    @@@__FIN ORDONNANCE__@@@");
-
 
 		//Ajout Orientation
 		System.out.println("    @@@__DEBUT ORIENTATION__@@@");
-
+		OrientationINPUT orientationINPUT = new OrientationINPUT();
+		orientationINPUT.setDate(LocalDate.now());
+		orientationINPUT.setConsultation(4L);
+		orientationINPUT.setSpecialite(4L);
+		orientationINPUT.setObservation("RAS");
+		OrientationDTO or = prescriptionService.createOrientation(orientationINPUT);
 		System.out.println("    @@@__FIN ORIENTATION__@@@");
-
-
-
-		System.out.println("===============AJOUT PRESCRIPTION=======================");
-
+		System.out.println("===============AJOUT PRESCRIPTION (Examen, Orientation, Ordonnance=======================");
 		System.out.println("Prescriptions ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+
+		/*//Ajouter Affectation Examen et type Examen.
+		System.out.println("===============DEBUT AFFECTATION EXAMEN TYPE EXAMEN=======================");
+
+		ExamenRepository examenRepository = ctx.getBean(ExamenRepository.class);
+		TypeExamenRepository typeExamenRepository = ctx.getBean(TypeExamenRepository.class);
+		ExamenTypeRepository examenTypeRepository = ctx.getBean(ExamenTypeRepository.class);
+
+		System.out.println("===============AJOUT AFFECTATION EXAMEN TYPE EXAMEN=======================");
+		System.out.println("Type Examen ajoutées avec succès");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+
+		//Ajouter Facture.
+		System.out.println("===============DEBUT FACTURE=======================");
+
+		FactureService factureService = ctx.getBean(FactureService.class);
+		/*
+		System.out.println("  @@@@@@@@@@@ AJOUT FACTURE PHARMACIE @@@@@@@@");
+
+		FacturePharmacieINPUT input = new FacturePharmacieINPUT();
+		List<DetailFacturePharmacieINPUT> listDetailINPUT = new ArrayList<>();
+		listDetailINPUT.add(new DetailFacturePharmacieINPUT(1L, 3500D,1));
+		listDetailINPUT.add(new DetailFacturePharmacieINPUT(2L, 1500D,1));
+		listDetailINPUT.add(new DetailFacturePharmacieINPUT(3L, 5000D,1));
+		input.setDate(LocalDate.of(2013,9,8));
+		input.setPharmacie(3L);
+		input.setOrdonnance(2L);
+		input.setDetailFacturePharmacieINPUTS(listDetailINPUT);
+		FacturePharmacieDTO dto = factureService.createFacturePharmacie(input);
+
+		System.out.println("Facture Pharmacie  ajoutées avec succès");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
+
+
+		System.out.println("   @@@@@@@@@@@ AJOUT FACTURE HOPITAL CONSULATATION @@@@@");
+
+		ConsultationRepository consultationRepository = ctx.getBean(ConsultationRepository.class);
+		FactureHopitalConsultationINPUT input = new FactureHopitalConsultationINPUT(2L);
+		Consultation consultation = consultationRepository.findByPrestationId(input.getConsultation());
+		factureService.createFactureHopitalConsultation(consultation);
+
+		System.out.println("Facture Hopital Consultation  ajoutées avec succès");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+		System.out.println("   @@@@@@@@@@@ AJOUT FACTURE HOPITAL EXAMEN @@@@@");
+
+		System.out.println("Facture Hopital Examen  ajoutées avec succès");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");
 
 		//private String port;
-		//String port = env.getProperty("server.port");
-		String server ="Server start on http://localhost:8088";
+		//String port = env.getProperty("port");
+		//String server ="Server start on http://localhost:8088";
 		//String server ="Server start on http://localhost:"+this.port;
 
 		//Logger get configuration on file "logback"
-		log.info(server);
-		System.out.println(server);
+		//log.info(server);
+		//System.out.println(server);
 
 		/*//Ajouter Consultation.
 		System.out.println("===============DEBUT CONSULTATION=======================");
@@ -537,6 +796,17 @@ public class MutuelleApplication {
 
 
 
+	}
+
+
+	@Bean
+	ApplicationRunner applicationRunner(Environment environment) {
+		return args -> {
+			String port = environment.getProperty("server.port");
+			String server ="Server start on http://localhost:"+port;
+			System.out.println(server);
+			//log.info("My Server start on http://localhost: " + environment.getProperty("port") );
+		};
 	}
 
 

@@ -26,4 +26,13 @@ public class Pathologie {
     private String nom;
 
     private String description;
+
+    public Pathologie(String nom) {
+        this.nom = nom;
+    }
+
+    public Pathologie(String nom, String description) {
+        this.nom = nom;
+        this.description = description;
+    }
 }

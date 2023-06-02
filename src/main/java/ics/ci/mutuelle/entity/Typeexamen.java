@@ -1,6 +1,6 @@
 package ics.ci.mutuelle.entity;
 
-import ics.ci.mutuelle.enums.Categorie;
+import ics.ci.mutuelle.enums.CategorieExamen;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "prescriptions", //
+@Table(name = "typeexamens", //
         uniqueConstraints = { //
                 @UniqueConstraint(name = "TYPEEXAMEN_UK", columnNames = "nom") })
 
@@ -30,5 +30,9 @@ public class Typeexamen {
 
     private  String description;
 
-    private Categorie categorie;
+    private CategorieExamen categorieExamen;
+
+    public Typeexamen(String nom) {
+        this.nom = nom;
+    }
 }

@@ -30,5 +30,8 @@ public class MedicamentPathologie {
     @JoinColumn(name = "Pathologie_Id", nullable = false)
     private Pathologie pathologie;
 
-
+    public MedicamentPathologie(Medicament medicament, Pathologie pathologie) {
+        this.medicament = medicament;
+        this.pathologie = pathologie;
+    }
 }

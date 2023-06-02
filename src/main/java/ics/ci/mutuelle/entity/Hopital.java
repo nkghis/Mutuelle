@@ -20,16 +20,20 @@ import java.util.Set;
 public class Hopital extends Partenaire {
 
     private String reference;
+
+    private Double prixConsultationGenerale;
+
+    private Double prixConsultationSpecialite;
     //private String specialite;
 
     //Many to many best way to get Chield field, if got one record check order of @Joincolumn name, look Table on database to see good order
     //On Create use Collection Type after Update to Type Set
-    @ManyToMany(fetch = FetchType.EAGER)
+    /*@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "specialite_hopital",
             joinColumns = @JoinColumn(
                     name = "hopital_id"),
             inverseJoinColumns = @JoinColumn(
                     name = "specialite_id"))
-    private Set<Specialite> specialites;
+    private Set<Specialite> specialites;*/
 }
