@@ -28,5 +28,11 @@ public class DetailFactureHopitalExamen {
     @JoinColumn(name = "ExamenTypeId", nullable = false)
     private ExamenType examenType;
 
-   private double prixUnitaire;
+   private Double prixUnitaire;
+
+    public DetailFactureHopitalExamen(FactureHopitalExamen factureHopitalExamen, ExamenType examenType, Double prixUnitaire) {
+        this.factureHopitalExamen = factureHopitalExamen;
+        this.examenType = examenType;
+        this.prixUnitaire = prixUnitaire;
+    }
 }

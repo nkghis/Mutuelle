@@ -1,4 +1,4 @@
-package ics.ci.mutuelle.dto.detailFacturePharmacie;
+package ics.ci.mutuelle.dto.detailFacture.detailFacturePharmacie;
 
 
 import com.sun.istack.internal.NotNull;

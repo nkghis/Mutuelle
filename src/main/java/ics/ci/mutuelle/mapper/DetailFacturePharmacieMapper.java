@@ -1,6 +1,6 @@
 package ics.ci.mutuelle.mapper;
 
-import ics.ci.mutuelle.dto.detailFacturePharmacie.DetailFacturePharmacieDTO;
+import ics.ci.mutuelle.dto.detailFacture.detailFacturePharmacie.DetailFacturePharmacieDTO;
 import ics.ci.mutuelle.entity.DetailFacturePharmacie;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

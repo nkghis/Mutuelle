@@ -1,7 +1,7 @@
 package ics.ci.mutuelle.dto.facture.facturePharmacie;
 
 
-import ics.ci.mutuelle.dto.detailFacturePharmacie.DetailFacturePharmacieDTO;
+import ics.ci.mutuelle.dto.detailFacture.detailFacturePharmacie.DetailFacturePharmacieDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

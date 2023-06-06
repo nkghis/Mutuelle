@@ -15,8 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ExamenAnalyseINPUT {
 
-    @NotNull
-    private Long assure;
+ /*   @NotNull
+    private Long assure;*/
 
     @NotNull
     private Long hopital;
@@ -24,8 +24,8 @@ public class ExamenAnalyseINPUT {
     @NotNull
     private Long medecin;
 
-    @NotNull
-    private Long specialite;
+   /* @NotNull
+    private Long specialite;*/
 
     @NotNull
     private Long examen;

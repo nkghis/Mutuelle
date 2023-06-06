@@ -15,5 +15,6 @@ public interface AdherantMapper {
     @Mapping(expression = "java(adherant.statutToString(adherant.getStatut()))" , target = "etat")
     @Mapping(source = "adherant.assureId" , target = "id")
     AdherantDTO toDTOut(Adherant adherant);
+
     List<AdherantDTO> listToDTOut(List<Adherant> adherants);
 }

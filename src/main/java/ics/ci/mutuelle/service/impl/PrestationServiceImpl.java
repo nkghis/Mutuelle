@@ -97,10 +97,11 @@ public class PrestationServiceImpl implements PrestationService {
     @Override
     public ExamenAnalyseDTO createExamenAnalyse(ExamenAnalyseINPUT input) {
 
-        Assure assure = assureRepository.getOne(input.getAssure());
+
         Hopital hopital = hopitalRepository.getOne(input.getHopital());
         Medecin medecin = medecinRepository.getOne(input.getMedecin());
         Examen examen = examenRepository.getOne(input.getExamen());
+        Assure assure = examen.getConsultation().getAssure();
 
         ExamenAnalyse examenAnalyse = new ExamenAnalyse();
         examenAnalyse.setAssure(assure);

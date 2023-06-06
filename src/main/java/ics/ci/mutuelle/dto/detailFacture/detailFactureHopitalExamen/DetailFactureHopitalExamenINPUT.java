@@ -1,4 +1,4 @@
-package ics.ci.mutuelle.dto.detailFacturePharmacie;
+package ics.ci.mutuelle.dto.detailFacture.detailFactureHopitalExamen;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailFacturePharmacieDTO {
+public class DetailFactureHopitalExamenINPUT {
 
-    private String medicament;
-    private int quantite;
+    private Long examenType;
     private Double prixUnitaire;
 }

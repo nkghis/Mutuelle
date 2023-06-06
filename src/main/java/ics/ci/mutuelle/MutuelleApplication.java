@@ -1,34 +1,22 @@
 package ics.ci.mutuelle;
 
 
-import ics.ci.mutuelle.dao.InputMedicament;
-import ics.ci.mutuelle.dto.detailFacturePharmacie.DetailFacturePharmacieINPUT;
+import ics.ci.mutuelle.dto.detailFacture.detailFactureHopitalExamen.DetailFactureHopitalExamenINPUT;
+import ics.ci.mutuelle.dto.detailFacture.detailFacturePharmacie.DetailFacturePharmacieINPUT;
 import ics.ci.mutuelle.dto.facture.factureHopitalConsultation.FactureHopitalConsultationINPUT;
+import ics.ci.mutuelle.dto.facture.factureHopitalExamen.FactureHopitalExamenDTO;
+import ics.ci.mutuelle.dto.facture.factureHopitalExamen.FactureHopitalExamenINPUT;
 import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieDTO;
 import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieINPUT;
-import ics.ci.mutuelle.dto.medicament.MedicamentINPUT;
-import ics.ci.mutuelle.dto.prescription.examen.ExamenDTO;
-import ics.ci.mutuelle.dto.prescription.examen.ExamenINPUT;
-import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceDTO;
-import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceINPUT;
-import ics.ci.mutuelle.dto.prescription.orientation.OrientationDTO;
-import ics.ci.mutuelle.dto.prescription.orientation.OrientationINPUT;
-import ics.ci.mutuelle.dto.prestation.consultation.ConsultationDTO;
-import ics.ci.mutuelle.dto.prestation.consultation.ConsultationINPUT;
+import ics.ci.mutuelle.dto.prestation.examenanalyse.ExamenAnalyseDTO;
+import ics.ci.mutuelle.dto.prestation.examenanalyse.ExamenAnalyseINPUT;
 import ics.ci.mutuelle.entity.Consultation;
-import ics.ci.mutuelle.entity.*;
-import ics.ci.mutuelle.enums.CategorieSpecialite;
-import ics.ci.mutuelle.enums.Sexe;
+import ics.ci.mutuelle.entity.DetailFactureHopitalExamen;
+import ics.ci.mutuelle.entity.FactureHopitalExamen;
 import ics.ci.mutuelle.repository.*;
-import ics.ci.mutuelle.repository.OrientationRepository;
-import ics.ci.mutuelle.repository.SpecialiteRepository;
-import ics.ci.mutuelle.service.AssureService;
 import ics.ci.mutuelle.service.FactureService;
-import ics.ci.mutuelle.service.PrescriptionService;
 import ics.ci.mutuelle.service.PrestationService;
-import ics.ci.mutuelle.utils.EncrytedPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,7 +27,6 @@ import org.springframework.core.env.Environment;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @SpringBootApplication
@@ -730,11 +717,11 @@ public class MutuelleApplication {
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
-		//Ajouter Facture.
+/*		//Ajouter Facture.
 		System.out.println("===============DEBUT FACTURE=======================");
 
 		FactureService factureService = ctx.getBean(FactureService.class);
-		/*
+
 		System.out.println("  @@@@@@@@@@@ AJOUT FACTURE PHARMACIE @@@@@@@@");
 
 		FacturePharmacieINPUT input = new FacturePharmacieINPUT();
@@ -749,25 +736,54 @@ public class MutuelleApplication {
 		FacturePharmacieDTO dto = factureService.createFacturePharmacie(input);
 
 		System.out.println("Facture Pharmacie  ajoutées avec succès");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 
 		System.out.println("   @@@@@@@@@@@ AJOUT FACTURE HOPITAL CONSULATATION @@@@@");
 
 		ConsultationRepository consultationRepository = ctx.getBean(ConsultationRepository.class);
-		FactureHopitalConsultationINPUT input = new FactureHopitalConsultationINPUT(2L);
-		Consultation consultation = consultationRepository.findByPrestationId(input.getConsultation());
+		FactureHopitalConsultationINPUT inputConsultation = new FactureHopitalConsultationINPUT(2L);
+		Consultation consultation = consultationRepository.findByPrestationId(inputConsultation.getConsultation());
 		factureService.createFactureHopitalConsultation(consultation);
-
 		System.out.println("Facture Hopital Consultation  ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
+
+		System.out.println("   @@@@@@@@@@@ AJOUT EXAMEN ANALYSE @@@@@");
+
+		PrestationService prestationService = ctx.getBean(PrestationService.class);
+		ExamenAnalyseINPUT inputExamen = new ExamenAnalyseINPUT();
+		inputExamen.setExamen(5L);
+		inputExamen.setHopital(2L);
+		inputExamen.setMedecin(5L);
+		inputExamen.setDatePrestation(LocalDate.of(2023, 1, 1));
+		inputExamen.setObservation("RAS");
+
+		ExamenAnalyseDTO dtoExamenAnalyse = prestationService.createExamenAnalyse(inputExamen);
+
+		System.out.println("Examen Analyse  ajoutées avec succès");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+
+
+
 		System.out.println("   @@@@@@@@@@@ AJOUT FACTURE HOPITAL EXAMEN @@@@@");
+
+		FactureHopitalExamenINPUT inputFactureExamen = new FactureHopitalExamenINPUT();
+		List<DetailFactureHopitalExamenINPUT> inputsDetail = new ArrayList<>();
+		inputsDetail.add(new DetailFactureHopitalExamenINPUT(1L, 75000D));
+		inputsDetail.add(new DetailFactureHopitalExamenINPUT(2L, 5000D));
+		inputsDetail.add(new DetailFactureHopitalExamenINPUT(3L, 3000D));
+		inputFactureExamen.setExamenAnalyse(5L);
+		inputFactureExamen.setDateFacture(LocalDate.of(2023, 2, 2));
+		inputFactureExamen.setInputs(inputsDetail);
+
+		FactureHopitalExamenDTO factureExamen = factureService.createFactureHopitalExamen(inputFactureExamen);
 
 		System.out.println("Facture Hopital Examen  ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
 		//private String port;
 		//String port = env.getProperty("port");

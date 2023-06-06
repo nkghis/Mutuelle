@@ -1,6 +1,7 @@
 package ics.ci.mutuelle.service.impl;
 
-import ics.ci.mutuelle.dto.detailFacturePharmacie.DetailFacturePharmacieINPUT;
+import ics.ci.mutuelle.dto.detailFacture.detailFactureHopitalExamen.DetailFactureHopitalExamenINPUT;
+import ics.ci.mutuelle.dto.detailFacture.detailFacturePharmacie.DetailFacturePharmacieINPUT;
 import ics.ci.mutuelle.dto.facture.factureHopitalConsultation.FactureHopitalConsultationDTO;
 import ics.ci.mutuelle.dto.facture.factureHopitalConsultation.FactureHopitalConsultationINPUT;
 import ics.ci.mutuelle.dto.facture.factureHopitalExamen.FactureHopitalExamenDTO;
@@ -9,10 +10,7 @@ import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieDTO;
 import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieINPUT;
 import ics.ci.mutuelle.entity.*;
 import ics.ci.mutuelle.enums.CategorieSpecialite;
-import ics.ci.mutuelle.mapper.DetailFacturePharmacieMapper;
-import ics.ci.mutuelle.mapper.FactureHopitalConsultationMapper;
-import ics.ci.mutuelle.mapper.FactureHopitalExamenMapper;
-import ics.ci.mutuelle.mapper.FacturePharmacieMapper;
+import ics.ci.mutuelle.mapper.*;
 import ics.ci.mutuelle.repository.*;
 import ics.ci.mutuelle.service.AssureService;
 import ics.ci.mutuelle.service.FactureService;
@@ -40,14 +38,18 @@ public class FactureServiceImpl implements FactureService {
     private final DetailOrdonnanceRepository detailOrdonnanceRepository;
     private final DetailFacturePharmacieRepository detailFacturePharmacieRepository;
     private final ConsultationRepository consultationRepository;
+    private final ExamenTypeRepository examenTypeRepository;
+    private final ExamenAnalyseRepository examenAnalyseRepository;
+    private final DetailFactureHopitalExamenRepository detailFactureHopitalExamenRepository;
 
     private final FactureHopitalConsultationMapper factureHopitalConsultationMapper;
     private final FactureHopitalExamenMapper factureHopitalExamenMapper;
     private final FacturePharmacieMapper facturePharmacieMapper;
     private final DetailFacturePharmacieMapper detailFacturePharmacieMapper;
+    private final DetailFactureHopitalExamenMapper detailFactureHopitalExamenMapper;
 
 
-    public FactureServiceImpl(PharmacieRepository pharmacieRepository, FactureHopitalConsultationRepository factureHopitalConsultationRepository, FactureHopitalExamenRepository factureHopitalExamenRepository, FacturePharmacieMapper facturePharmacieMapper, DetailFacturePharmacieMapper detailFacturePharmacieMapper, FacturePharmacieRepository facturePharmacieRepository, FactureHopitalConsultationMapper factureHopitalConsultationMapper, FactureHopitalExamenMapper factureHopitalExamenMapper, OrdonnanceRepository ordonnanceRepository, DetailOrdonnanceRepository detailOrdonnanceRepository, DetailFacturePharmacieRepository detailFacturePharmacieRepository, AssureService assureService, ConsultationRepository consultationRepository) {
+    public FactureServiceImpl(PharmacieRepository pharmacieRepository, FactureHopitalConsultationRepository factureHopitalConsultationRepository, FactureHopitalExamenRepository factureHopitalExamenRepository, FacturePharmacieMapper facturePharmacieMapper, DetailFacturePharmacieMapper detailFacturePharmacieMapper, FacturePharmacieRepository facturePharmacieRepository, FactureHopitalConsultationMapper factureHopitalConsultationMapper, FactureHopitalExamenMapper factureHopitalExamenMapper, OrdonnanceRepository ordonnanceRepository, DetailOrdonnanceRepository detailOrdonnanceRepository, DetailFacturePharmacieRepository detailFacturePharmacieRepository, AssureService assureService, ConsultationRepository consultationRepository, ExamenTypeRepository examenTypeRepository, ExamenAnalyseRepository examenAnalyseRepository, DetailFactureHopitalExamenMapper detailFactureHopitalExamenMapper, DetailFactureHopitalExamenRepository detailFactureHopitalExamenRepository) {
         this.pharmacieRepository = pharmacieRepository;
         this.factureHopitalConsultationRepository = factureHopitalConsultationRepository;
         this.factureHopitalExamenRepository = factureHopitalExamenRepository;
@@ -61,6 +63,10 @@ public class FactureServiceImpl implements FactureService {
         this.detailFacturePharmacieRepository = detailFacturePharmacieRepository;
         this.assureService = assureService;
         this.consultationRepository = consultationRepository;
+        this.examenTypeRepository = examenTypeRepository;
+        this.examenAnalyseRepository = examenAnalyseRepository;
+        this.detailFactureHopitalExamenMapper = detailFactureHopitalExamenMapper;
+        this.detailFactureHopitalExamenRepository = detailFactureHopitalExamenRepository;
     }
 
     //Facture pharmacie
@@ -166,17 +172,68 @@ public class FactureServiceImpl implements FactureService {
 
     @Override
     public FactureHopitalExamenDTO createFactureHopitalExamen(FactureHopitalExamenINPUT input) {
-        return null;
+
+        FactureHopitalExamen facturePersist;
+        FactureHopitalExamen facture = new FactureHopitalExamen();
+        List<DetailFactureHopitalExamen> details = new ArrayList<>();
+        Double montantTotal = 0D;
+
+        ExamenAnalyse examenAnalyse = examenAnalyseRepository.getOne(input.getExamenAnalyse());
+        //SET facture begin
+        facture.setDateFacture(input.getDateFacture());
+        facture.setExamenAnalyse(examenAnalyse);
+        facture.setDate(LocalDateTime.now());
+        //persist facture
+       factureHopitalExamenRepository.save(facture);
+
+
+        //Set detail Facture and get montant total
+        for (DetailFactureHopitalExamenINPUT detailINPUT : input.getInputs()){
+            ExamenType examenType = examenTypeRepository.findById(detailINPUT.getExamenType()).orElse(null);
+            DetailFactureHopitalExamen detail = new DetailFactureHopitalExamen();
+            detail.setFactureHopitalExamen(facture);
+            detail.setExamenType(examenType);
+            detail.setPrixUnitaire(detailINPUT.getPrixUnitaire());
+            detailFactureHopitalExamenRepository.save(detail);
+            details.add(detail);
+            montantTotal = montantTotal + detailINPUT.getPrixUnitaire();
+        }
+        //Get Taux assurance from assure
+        Double pourcentageAssurance = assureService.getTauxCouverture(examenAnalyse.getAssure());
+        //Get cote part assusrance
+        Double cotePartAssurance = this.pourcentage(pourcentageAssurance, montantTotal);
+        //Get cote part assure
+        Double cotePartAssure = montantTotal - cotePartAssurance;
+
+        //Set Facture end
+        facture.setCotePartAssurance(cotePartAssurance);
+        facture.setCotePartAssure(cotePartAssure);
+        facture.setMontantTotal(montantTotal);
+        facture =  factureHopitalExamenRepository.save(facture);
+        //facturePersist =  factureHopitalExamenRepository.save(facture);
+
+       //Create New detail Facture List Persist
+       List<DetailFactureHopitalExamen> detailsPersist = new ArrayList<>();
+      /* for (DetailFactureHopitalExamen examen : details ){
+               examen.setFactureHopitalExamen(facturePersist);
+               detailFactureHopitalExamenRepository.save(examen);
+               //detailsPersist.add(detailFactureHopitalExamenRepository.save(examen));
+       }*/
+
+        //List<DetailFactureHopitalExamen> detailsPersist = detailFactureHopitalExamenRepository.saveAll(details);
+
+        return factureHopitalExamenMapper.toDTO(facture, detailFactureHopitalExamenMapper.listToDTO(details));
     }
 
     @Override
     public FactureHopitalExamenDTO createFactureHopitalExamen(FactureHopitalExamen factureHopitalExamen) {
+
         return null;
     }
 
     @Override
     public List<FactureHopitalExamenDTO> listFactureHopitalExamen(List<FactureHopitalExamen> factureHopitalExamens) {
-        return null;
+        return factureHopitalExamenMapper.toDTO(factureHopitalExamens);
     }
 
     public double pourcentage(double pourcentage, double total) {
