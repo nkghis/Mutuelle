@@ -28,6 +28,9 @@ public abstract class Prestation {
     @Column(name = "prestation_id", nullable = false)
     private Long prestationId;
 
+    @Column(name="typeprestation", insertable = false, updatable = false)
+    protected String typePrestation;
+
     @ManyToOne
     @JoinColumn(name = "assureId")
     private Assure assure;

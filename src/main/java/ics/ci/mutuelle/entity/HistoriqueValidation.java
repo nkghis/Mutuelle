@@ -1,5 +1,6 @@
 package ics.ci.mutuelle.entity;
 
+import ics.ci.mutuelle.enums.Statut;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,6 @@ public class HistoriqueValidation {
     @JoinColumn(name = "ExamenTypeId")
     private ExamenType examenType;
     private LocalDateTime date;
-    private Boolean etat;
+    private Statut statut;
     private String observation;
 }

@@ -27,6 +27,10 @@ public abstract class Facture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "facture_id", nullable = false)
     private Long factureId;
+
+    @Column(name="typefacture", insertable = false, updatable = false)
+    protected String typeFacture;
+
     private Double cotePartAssure;
     private Double cotePartAssurance;
     private Double montantTotal;

@@ -32,9 +32,11 @@ public class Orientation extends Prescription{
         this.observation = observation;
     }
 
-    public Orientation(Long prescriptionId, Consultation consultation, LocalDate date, Specialite specialite, String observation) {
+
+   /* public Orientation(Long prescriptionId, Consultation consultation, LocalDate date, Specialite specialite, String observation) {
         super(prescriptionId, consultation, date);
         this.specialite = specialite;
         this.observation = observation;
-    }
+
+    }*/
 }

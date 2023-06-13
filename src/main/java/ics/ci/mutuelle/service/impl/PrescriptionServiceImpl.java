@@ -1,7 +1,6 @@
 package ics.ci.mutuelle.service.impl;
 
 import ics.ci.mutuelle.dao.InputMedicament;
-import ics.ci.mutuelle.dto.examentype.ExamenTypeDTO;
 import ics.ci.mutuelle.dto.prescription.examen.ExamenDTO;
 import ics.ci.mutuelle.dto.prescription.examen.ExamenINPUT;
 import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceDTO;
@@ -9,18 +8,18 @@ import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceINPUT;
 import ics.ci.mutuelle.dto.prescription.orientation.OrientationDTO;
 import ics.ci.mutuelle.dto.prescription.orientation.OrientationINPUT;
 import ics.ci.mutuelle.entity.*;
+import ics.ci.mutuelle.enums.Etat;
+import ics.ci.mutuelle.enums.Statut;
 import ics.ci.mutuelle.mapper.*;
 import ics.ci.mutuelle.repository.*;
 import ics.ci.mutuelle.service.PrescriptionService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,6 +99,17 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         return orientationMapper.listToDTO(orientationRepository.findAll());
     }
 
+    @Override
+    public List<Orientation> listOrientationByAssure(Assure assure) {
+        List<Consultation> consultations = consultationRepository.findByAssure(assure);
+        List<Orientation> orientations = new ArrayList<>();
+        for (Consultation consultation : consultations){
+            List<Orientation> o = orientationRepository.findByConsultation(consultation);
+            orientations.addAll(o);
+        }
+        return orientations;
+    }
+
     //Examen
     @Override
     public ExamenDTO createExamen(ExamenINPUT input) {
@@ -116,7 +126,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                 Typeexamen typeexamen = typeExamenRepository.getOne(id);
                 ExamenType examenType = new ExamenType();
                 examenType.setDate(LocalDateTime.now());
-                examenType.setEtat(false);
+                examenType.setStatut(Statut.EN_ATTENTE);
+                examenType.setEtat(Etat.EN_SOMMEIL);
                 examenType.setExamen(ex);
                 examenType.setTypeexamen(typeexamen);
                 examenTypes.add(examenType);
@@ -158,6 +169,18 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
+    public List<Examen> listExamenByAssure(Assure assure) {
+
+        List<Consultation> consultations = consultationRepository.findByAssure(assure);
+        List<Examen> examens = new ArrayList<>();
+        for (Consultation consultation : consultations){
+            List<Examen> o = examenRepository.findByConsultation(consultation);
+            examens.addAll(o);
+        }
+        return examens;
+    }
+
+    @Override
     public List<Typeexamen> getTypeExamensByExamen(Examen examen) {
 
         //Get Examen type by Examen
@@ -169,6 +192,78 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         }).collect(Collectors.toList());
         return typeexamens;
     }
+
+    @Override
+    public List<ExamenType> listExamenTypeByExamen(Examen examen) {
+        return examenTypeRepository.findByExamen(examen);
+    }
+
+    @Override
+    public void changeStatutExamenType(ExamenType examenType, Statut statut) {
+        examenType.setStatut(statut);
+        examenTypeRepository.save(examenType);
+    }
+
+    @Override
+    public void changeStatusExamenTypes(List<ExamenType> examenTypes, Statut statut) {
+
+        for (ExamenType examenType : examenTypes){
+          this.changeStatutExamenType(examenType, statut);
+        }
+    }
+
+    @Override
+    public List<ExamenType> listExamenTypeByStatut(Statut statut){
+
+        Assure assure = assureRepository.getOne(1L);
+        return examenTypeRepository.findByStatut(statut);
+    }
+
+    @Override
+    public List<ExamenType> listExamenTypeByStatut(List<ExamenType> examenTypes, Statut statut) {
+
+        List<ExamenType> e = examenTypes
+                .stream()
+                .filter(
+                        u -> u.getStatut().equals(statut)
+                )
+                .collect(Collectors.toList());
+
+        return e;
+    }
+
+    @Override
+    public List<ExamenType> listExamenTypeByStatutAndEtat(Statut statut, Etat etat){
+
+        return examenTypeRepository.findByStatutAndEtat(statut, etat);
+    }
+
+
+
+    @Override
+    public List<ExamenType> listExamenTypeByStatutAndEtat(List<ExamenType> examenTypes,Statut statut, Etat etat){
+
+        List<ExamenType> EXAMENTYPES = examenTypes
+                .stream()
+                .filter(
+                        u -> u.getStatut().equals(statut) && u.getEtat().equals(etat)
+                )
+                .collect(Collectors.toList());
+
+        return EXAMENTYPES ;
+    }
+
+    @Override
+    public List<ExamenType> listExamenTypeByAssure(Assure assure) {
+        List<Examen> examens = this.listExamenByAssure(assure);
+        List<ExamenType> examenTypes = new ArrayList<>();
+        for (Examen examen : examens){
+            List<ExamenType> EXAMENTYPE = this.listExamenTypeByExamen(examen);
+            examenTypes.addAll(EXAMENTYPE);
+        }
+        return examenTypes;
+    }
+
 
     @Override
     public OrdonnanceDTO createOrdonnance(OrdonnanceINPUT input) {
@@ -207,6 +302,18 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
         List<DetailOrdonnance> detailOrdonnances = detailOrdonnanceRepository.findByOrdonnance(ordonnance);
         return ordonnanceMapper.toDTO(ordonnance, detailOrdonnanceMapper.listToDTO(detailOrdonnances));
+    }
+
+
+    @Override
+    public List<Ordonnance> listOrdonnanceByAssure(Assure assure) {
+        List<Consultation> consultations = consultationRepository.findByAssure(assure);
+        List<Ordonnance> ordonnances = new ArrayList<>();
+        for (Consultation consultation : consultations){
+            List<Ordonnance> o = ordonnanceRepository.findByConsultation(consultation);
+            ordonnances.addAll(o);
+        }
+        return ordonnances;
     }
 
     @Override

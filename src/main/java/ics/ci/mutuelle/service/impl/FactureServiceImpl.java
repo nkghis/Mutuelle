@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -126,6 +127,11 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
+    public List<FacturePharmacie> listFacturePharmacieByPharmacie(Pharmacie pharmacie) {
+        return facturePharmacieRepository.findByPharmacie(pharmacie);
+    }
+
+    @Override
     public List<FacturePharmacieDTO> listFacturePharmacie(List<FacturePharmacie> facturePharmacies) {
 
        /* List<List<DetailFacturePharmacie>> d = new ArrayList<>();
@@ -168,6 +174,17 @@ public class FactureServiceImpl implements FactureService {
     @Override
     public List<FactureHopitalConsultationDTO> listFactureHopitalConsultation(List<FactureHopitalConsultation> factureHopitalConsultations) {
         return null;
+    }
+
+    @Override
+    public List<FactureHopitalConsultation> listFactureHopitalConsultationByHopital(Hopital hopital) {
+        List<Consultation> consultations = consultationRepository.findByHopital(hopital);
+        List<FactureHopitalConsultation> factureHopitalConsultations = new ArrayList<>();
+        for (Consultation consultation : consultations){
+            List<FactureHopitalConsultation> facture = factureHopitalConsultationRepository.findByConsultation(consultation);
+            factureHopitalConsultations.addAll(facture);
+        }
+        return factureHopitalConsultations;
     }
 
     @Override
@@ -229,6 +246,18 @@ public class FactureServiceImpl implements FactureService {
     public FactureHopitalExamenDTO createFactureHopitalExamen(FactureHopitalExamen factureHopitalExamen) {
 
         return null;
+    }
+
+    @Override
+    public List<FactureHopitalExamen> listFactureHopitalHopitalByHopital(Hopital hopital) {
+
+        List<ExamenAnalyse> examenAnalyses = examenAnalyseRepository.findByHopital(hopital);
+        List<FactureHopitalExamen> factureHopitalExamen = new ArrayList<>();
+        for (ExamenAnalyse examenAnalyse : examenAnalyses){
+            List<FactureHopitalExamen> facture = factureHopitalExamenRepository.findByExamenAnalyse(examenAnalyse);
+            factureHopitalExamen.addAll(facture);
+        }
+        return factureHopitalExamen;
     }
 
     @Override

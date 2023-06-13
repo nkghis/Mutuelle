@@ -28,12 +28,17 @@ public abstract class Prescription {
     private Long prescriptionId;
 
 
+
     @ManyToOne
     @JoinColumn(name = "consultationId")
     private Consultation consultation;
 
 
     private LocalDate date;
+
+    @Column(name="typeprescription", insertable = false, updatable = false)
+    protected String typePrescription;
+
 
 
     /*@ManyToOne

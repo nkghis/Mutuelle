@@ -1,5 +1,7 @@
 package ics.ci.mutuelle.entity;
 
+import ics.ci.mutuelle.enums.Etat;
+import ics.ci.mutuelle.enums.Statut;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +33,6 @@ public class ExamenType {
     private Typeexamen typeexamen;
 
     private LocalDateTime date;
-    private Boolean etat;
+    private Statut statut;
+    private Etat etat;
 }

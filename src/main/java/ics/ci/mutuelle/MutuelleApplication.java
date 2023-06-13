@@ -1,6 +1,7 @@
 package ics.ci.mutuelle;
 
 
+import ics.ci.mutuelle.dao.InputMedicament;
 import ics.ci.mutuelle.dto.detailFacture.detailFactureHopitalExamen.DetailFactureHopitalExamenINPUT;
 import ics.ci.mutuelle.dto.detailFacture.detailFacturePharmacie.DetailFacturePharmacieINPUT;
 import ics.ci.mutuelle.dto.facture.factureHopitalConsultation.FactureHopitalConsultationINPUT;
@@ -8,14 +9,24 @@ import ics.ci.mutuelle.dto.facture.factureHopitalExamen.FactureHopitalExamenDTO;
 import ics.ci.mutuelle.dto.facture.factureHopitalExamen.FactureHopitalExamenINPUT;
 import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieDTO;
 import ics.ci.mutuelle.dto.facture.facturePharmacie.FacturePharmacieINPUT;
+import ics.ci.mutuelle.dto.prescription.examen.ExamenDTO;
+import ics.ci.mutuelle.dto.prescription.examen.ExamenINPUT;
+import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceDTO;
+import ics.ci.mutuelle.dto.prescription.ordonnance.OrdonnanceINPUT;
+import ics.ci.mutuelle.dto.prescription.orientation.OrientationDTO;
+import ics.ci.mutuelle.dto.prescription.orientation.OrientationINPUT;
+import ics.ci.mutuelle.dto.prestation.consultation.ConsultationDTO;
+import ics.ci.mutuelle.dto.prestation.consultation.ConsultationINPUT;
 import ics.ci.mutuelle.dto.prestation.examenanalyse.ExamenAnalyseDTO;
 import ics.ci.mutuelle.dto.prestation.examenanalyse.ExamenAnalyseINPUT;
-import ics.ci.mutuelle.entity.Consultation;
-import ics.ci.mutuelle.entity.DetailFactureHopitalExamen;
-import ics.ci.mutuelle.entity.FactureHopitalExamen;
+import ics.ci.mutuelle.entity.*;
+import ics.ci.mutuelle.enums.CategorieSpecialite;
+import ics.ci.mutuelle.enums.Sexe;
 import ics.ci.mutuelle.repository.*;
 import ics.ci.mutuelle.service.FactureService;
+import ics.ci.mutuelle.service.PrescriptionService;
 import ics.ci.mutuelle.service.PrestationService;
+import ics.ci.mutuelle.utils.EncrytedPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,6 +38,7 @@ import org.springframework.core.env.Environment;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @SpringBootApplication
@@ -38,6 +50,13 @@ public class MutuelleApplication {
 
 
 		ApplicationContext ctx = SpringApplication.run(MutuelleApplication.class, args);
+
+
+		/*PrescriptionService prescriptionService = ctx.getBean(PrescriptionService.class);
+		AssureRepository assureRepository = ctx.getBean(AssureRepository.class);
+		Assure assure = assureRepository.findById(4L).orElse(null);
+		List<Examen> examens = prescriptionService.listExamenByAssure(assure);
+		String s ="";*/
 
 /*		AssureService assureService = ctx.getBean(AssureService.class);
 		Adherant adherant = assureService.getAdherantByAssure(3L);
@@ -87,9 +106,9 @@ public class MutuelleApplication {
 		Specialite specialite = specialiteRepository.findBySpecialiteId(2L);
 		Double aa = factureService.getMontantConsultation(hopital,specialite);
 		String s ="";*/
+/*
 
-
-		/*		String p = "123";
+		String p = "123";
 		String password = EncrytedPasswordUtils.encrytePassword(p);
 
 		System.out.println("===============DEBUT TRANSACTION=======================");
@@ -124,9 +143,8 @@ public class MutuelleApplication {
 		userRoleRepository.save(new UserRole(userPharmacieVallons,rolePharmacie));
 		userRoleRepository.save(new UserRole(userPharmacieStLuc,rolePharmacie));
 
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");
 
-/*
 		//Ajout Police Adherant et Beneficiaire
 		System.out.println("===============DEBUT TRANSACTION=======================");
 		PoliceRepository policeRepository = ctx.getBean(PoliceRepository.class);
@@ -253,10 +271,9 @@ public class MutuelleApplication {
 		System.out.println("===============AJOUT BENEFICIARE=======================");
 		beneficiaireRepository.findAll().forEach(u->System.out.println(u.getNom() + " " + u.getPrenom()));
 		System.out.println("Bénéficiaires ajoutés avec succès");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 
-/*
 	//Ajout de specialité
 		System.out.println("===============DEBUT TRANSACTION SPECIALITE=======================");
 
@@ -276,9 +293,6 @@ public class MutuelleApplication {
 		System.out.println("Specialités ajoutés avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
- */
-
-/*
 		//Ajout de Partenaire.
 		//Ajout de Hopitaux
 
@@ -355,15 +369,9 @@ public class MutuelleApplication {
 		System.out.println("===============AJOUT PHARMACIE=======================");
 		pharmacieRepository.findAll().forEach(u->System.out.println(u.getNom()));
 		System.out.println("Pharmacies ajoutées avec succès");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-
-
-
-
-
-
-
+*/
 
 
 /*
@@ -400,8 +408,7 @@ public class MutuelleApplication {
 */
 
 
-/*
-		//Ajouter medecin
+/*		//Ajouter medecin
 
 		System.out.println("===============DEBUT MEDECIN ET MEDECIN_SPECIALITE=======================");
 
@@ -469,8 +476,8 @@ public class MutuelleApplication {
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
-
-/*		//Ajouter Consultation.
+/*
+		//Ajouter Consultation.
 		System.out.println("===============DEBUT CONSULTATION=======================");
 
 		PrestationService prestationService = ctx.getBean(PrestationService.class);
@@ -521,8 +528,7 @@ public class MutuelleApplication {
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
-/*
-		//Ajouter Prescription.
+/*		//Ajouter Prescription.
 		System.out.println("===============DEBUT MEDICAMENT PATHOLOGIE ET AFFECTATION =======================");
 
 		PathologieRepository pathologieRepository = ctx.getBean(PathologieRepository.class);
@@ -629,8 +635,9 @@ public class MutuelleApplication {
 		System.out.println("Medicaments, pathologies et affection medicament aux pathologies ajoutés avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
-/*
-		//Ajouter Type examen.
+
+
+/*		//Ajouter Type examen.
 		System.out.println("===============DEBUT TYPE EXAMEN=======================");
 
 		TypeExamenRepository typeExamenRepository = ctx.getBean(TypeExamenRepository.class);
@@ -662,7 +669,8 @@ public class MutuelleApplication {
 		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
 
-/*		//Ajouter Prescription.
+/*
+		//Ajouter Prescription.
 		System.out.println("===============DEBUT PRESCRIPTION=======================");
 
 		PrescriptionService prescriptionService = ctx.getBean(PrescriptionService.class);
@@ -703,21 +711,17 @@ public class MutuelleApplication {
 		System.out.println("===============AJOUT PRESCRIPTION (Examen, Orientation, Ordonnance=======================");
 		System.out.println("Prescriptions ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");
+*/
 
-		/*//Ajouter Affectation Examen et type Examen.
-		System.out.println("===============DEBUT AFFECTATION EXAMEN TYPE EXAMEN=======================");
 
-		ExamenRepository examenRepository = ctx.getBean(ExamenRepository.class);
-		TypeExamenRepository typeExamenRepository = ctx.getBean(TypeExamenRepository.class);
-		ExamenTypeRepository examenTypeRepository = ctx.getBean(ExamenTypeRepository.class);
 
-		System.out.println("===============AJOUT AFFECTATION EXAMEN TYPE EXAMEN=======================");
+/*		System.out.println("===============AJOUT AFFECTATION EXAMEN TYPE EXAMEN=======================");
 		System.out.println("Type Examen ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");
 
-/*		//Ajouter Facture.
+		//Ajouter Facture.
 		System.out.println("===============DEBUT FACTURE=======================");
 
 		FactureService factureService = ctx.getBean(FactureService.class);
@@ -753,7 +757,7 @@ public class MutuelleApplication {
 
 		PrestationService prestationService = ctx.getBean(PrestationService.class);
 		ExamenAnalyseINPUT inputExamen = new ExamenAnalyseINPUT();
-		inputExamen.setExamen(5L);
+		inputExamen.setExamen(1L);
 		inputExamen.setHopital(2L);
 		inputExamen.setMedecin(5L);
 		inputExamen.setDatePrestation(LocalDate.of(2023, 1, 1));
@@ -783,26 +787,9 @@ public class MutuelleApplication {
 		System.out.println("Facture Hopital Examen  ajoutées avec succès");
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
-
-		//private String port;
-		//String port = env.getProperty("port");
-		//String server ="Server start on http://localhost:8088";
-		//String server ="Server start on http://localhost:"+this.port;
-
-		//Logger get configuration on file "logback"
-		//log.info(server);
-		//System.out.println(server);
-
-		/*//Ajouter Consultation.
-		System.out.println("===============DEBUT CONSULTATION=======================");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&"); */
 
 
-		System.out.println("===============AJOUT CONSULTATION=======================");
-
-		System.out.println("consultations ajoutées avec succès");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&FIN DE LA TRANSACTION&&&&&&&&&&&&&&&&&&&");*/
 
 
 
